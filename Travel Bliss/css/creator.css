@@ -1,0 +1,61 @@
+body {
+    font-family: 'Times New Roman', serif;
+}
+
+h1 {
+    color: #000000;
+}
+
+p {
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+form {
+    margin-top: 20px;
+    max-width: 600px;
+    /* Add this line to limit the width */
+    margin-left: auto;
+    /* Center the form horizontally */
+    margin-right: auto;
+    /* Center the form horizontally */
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.listing-details {
+    display: none;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #34495e;
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}

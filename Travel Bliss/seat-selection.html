@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Selection - Travel Bliss</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/seat-selection.css">
+</head>
+
+<header>
+    <nav>
+        <a href="index.html">
+            <img src="/images/logoo.png" alt="Travel Bliss Logo" class="logo">
+            <span class="logo-text">Travel Bliss</span>
+        </a>
+        <ul>
+            <li><a href="flights.html">Flights</a></li>
+            <li><a href="hotels.html">Hotels</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="creator.html" class="create-button">Creator</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <section class="seat-selection">
+        <div class="seat-picker">
+            <h1>Seat Selection</h1>
+            <p>Select your seat for the flight.</p>
+            <div class="seat-map">
+                <!-- Example seat map -->
+                <div class="row">
+                    <div class="seat">1A</div>
+                    <div class="seat">1B</div>
+                    <div class="seat">1C</div>
+                    <div class="seat">1D</div>
+                </div>
+                <div class="row">
+                    <div class="seat">2A</div>
+                    <div class="seat">2B</div>
+                    <div class="seat">2C</div>
+                    <div class="seat">2D</div>
+                </div>
+                <!-- Add more rows as needed -->
+            </div>
+            <button class="finalize-booking-button">Finalize Booking</button>
+            <a href="flights.html" class="back-button">Back</a>
+        </div>
+        <div class="ticket-info">
+            <h2>Ticket Information</h2>
+            <p>Flight: Flight 1</p>
+            <p>From: New York</p>
+            <p>To: Los Angeles</p>
+            <p>Date: 2023-10-15</p>
+            <p>Time: 10:00 AM</p>
+            <p>Seat: <span id="selected-seat">None</span></p>
+            <p>Price: $300</p>
+        </div>
+    </section>
+</body>
+
+</html>
