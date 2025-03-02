@@ -1,0 +1,201 @@
+body {
+    font-family: 'Times New Roman', serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-image 0.5s ease-in-out;
+}
+
+h1 {
+    color: #000000;
+}
+
+p {
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+form {
+    margin-top: 20px;
+    max-width: 600px;
+    /* Add this line to limit the width */
+    margin-left: auto;
+    /* Center the form horizontally */
+    margin-right: auto;
+    /* Center the form horizontally */
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.listing-details {
+    display: none;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #34495e;
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}
+
+.background-flight {
+    background-image: url('../images/flight.jpg');
+}
+
+.background-hotel {
+    background-image: url('../images/hotel.jpg');
+}
+
+.background-package {
+    background-image: url('../images/package.jpg');
+}
+
+.create-button {
+    background-color: #ff5733;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.create-button:hover {
+    background-color: #c70039;
+    transform: scale(1.05);
+}
+
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.message.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #ccc;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* General tab styling */
+.tabs {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.tabs ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tabs ul li {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-bottom: none; /* Important:  Creates the visual connection to the content */
+}
+
+.tabs ul li:hover {
+    background-color: #ddd;
+}
+
+.tabs ul li.current {
+    background-color: #fff;
+    border-bottom: 1px solid #fff; /* Cover the border of the content area */
+}
+
+/* Tab content styling */
+.tab-content {
+    display: none; /* Initially hide all content */
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.tab-content.current {
+    display: block; /* Show the active tab content */
+}
+
+/* Style the form elements within the tabs as needed */
+.tab-content label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.tab-content input[type="text"],
+.tab-content input[type="number"],
+.tab-content input[type="time"],
+.tab-content input[type="date"],
+.tab-content textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /*  Important for consistent width */
+}
