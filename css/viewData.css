@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+#data-section {
+    display: none;
+    padding: 20px;
+}
+
+.data-group {
+    margin-bottom: 40px;
+    width: 100%;
+    overflow-x: auto;
+    /* Ensure tables are scrollable if they overflow */
+}
+
+.data-group h2 {
+    margin-bottom: 10px;
+}
+
+.data-group table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-group table,
+.data-group th,
+.data-group td {
+    border: 1px solid #ddd;
+}
+
+.data-group th,
+.data-group td {
+    padding: 8px;
+    text-align: left;
+}
+
+.data-group th {
+    background-color: #f2f2f2;
+}
+
+.data-group img {
+    max-width: 100px;
+    height: auto;
+}
+
+button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+input[type="password"] {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    /* Ensure the input field takes full width */
+    box-sizing: border-box;
+    /* Include padding and border in the element's total width and height */
+}

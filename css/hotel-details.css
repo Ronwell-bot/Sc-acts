@@ -1,0 +1,129 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+header nav {
+    background-color: #333;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header nav .logo {
+    float: left;
+    padding: 10px;
+    height: 40px;
+    /* Adjust the height to fit the text size */
+}
+
+header nav .logo-text {
+    display: inline-block;
+    vertical-align: middle;
+    color: white;
+    font-size: 1.5em;
+    margin-left: 10px;
+}
+
+header nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+header nav ul li a:hover {
+    background-color: #111;
+}
+
+header a {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+header a:hover {
+    color: #ff5733;
+    transform: scale(1.1);
+}
+
+.hotel-details {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-details h1 {
+    text-align: center;
+    color: #333;
+}
+
+.hotel-images {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.hotel-images img {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.hotel-info p {
+    margin: 10px 0;
+    color: #555;
+}
+
+.hotel-info p strong {
+    color: #333;
+}
+
+.hotel-booking {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.hotel-booking p {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.book-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.book-button:hover {
+    background-color: #218838;
+}
