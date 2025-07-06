@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator</title>
+    <style>
+
+        body{
+            font-family: Verdana;
+            text-align: center;
+        }
+        #button{
+             font-size: 3em;
+             padding: 5px 25px;
+             border-radius: 5px;
+             background-color: rgb(94, 90, 90);
+        }
+        #myLabel{
+            font-size: 5em;
+        }
+        .labels{
+            font-size: 3em;
+        }
+        h2{
+            background-color: rgb(0, 0, 0);
+            color: white;
+            
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="button"> Roll</button> <br>
+    <h2>Dice 1</h2>
+    <label id="myLabel1" class="labels"></label> <br>
+    <h2>Dice 2</h2>
+    <label id="myLabel2" class="labels"></label> <br>
+    <h2>Dice 3</h2>
+    <label id="myLabel3" class="labels"></label> <br>
+
+</body>
+</html>
+
+<script>
+
+    const button = document.getElementById("button");
+    const myLabel1 = document.getElementById("myLabel1");
+    const myLabel2 = document.getElementById("myLabel2");
+    const myLabel3 = document.getElementById("myLabel3");
+    const min = 1;
+    const max = 6;
+    let randomNum;
+
+    button.onclick = function(){
+        randomNum1 = Math.floor(Math.random() * max) + min;
+        randomNum2 = Math.floor(Math.random() * max) + min;
+        randomNum3 = Math.floor(Math.random() * max) + min;
+        myLabel1.textContent = randomNum1;
+        myLabel2.textContent = randomNum2;
+        myLabel3.textContent = randomNum3;
+
+    }
+
+
+</script>
