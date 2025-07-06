@@ -1,0 +1,96 @@
+@font-face{
+    src: url(/fonts/Arimo-VariableFont_wght.ttf);
+    font-family: Arimo;
+}
+@font-face{
+    src: url(/fonts/SairaCondensed-ExtraBold.ttf);
+    font-family: Saira-bold;
+}
+*{
+    box-sizing: border-box;
+}
+body{
+    background-color: #91A0AC;
+    height: 100vh;
+    color: #2F360D;
+}
+
+.navbar-div{
+    border: #BEC5CB solid 2px;
+    height: 5%;
+    text-align: center;
+    font-family: Saira-bold;
+    display: flex;
+}
+.navbar-div h1{
+    margin: 0%;
+    position: relative;
+    top: 10px;
+    left: 5px;
+    font-weight: bolder;
+}
+.navbar-div ul{
+    display: flex;
+    text-align: left;
+    list-style: none;
+    padding-left: 650px;
+}
+.navbar-div a{
+    color: #2F360D;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+}
+.navbar-div a:hover{
+    background-color: #73818d; 
+    border-radius: 10px;
+}
+.navbar-div a:active{
+    background-color: #636f79; 
+    color: #2f360f;;
+    border-radius: 10px;
+}
+.navbar-div li{
+    padding-left: 10px;
+}
+.header-div{
+    border: #BEC5CB solid 2px;
+    height: 40%;
+    width: auto;
+    padding: 0px 0px 0px 0px;
+    font-family: Saira-bold;
+    font-size: 3.5em;
+    display: flex;
+}
+.left-header{
+    width: 55%;
+    padding: 0px 0px 0px 25px;  /*top right bot left */
+}
+.right-header{
+    width: 45%; 
+    padding: 10px;
+}
+.right-header img {
+    width: 95%;
+    height: 85%;
+    position: relative;
+    right: 20px;
+    top: 40px;
+}
+
+
+
+
+
+.body-div{
+    border: black solid 2px;
+    max-height: auto;
+}
+
+.footer-div{
+    border: black solid 2px;
+    height: 10%;
+    width: auto;
+    max-height: auto;
+}
+
