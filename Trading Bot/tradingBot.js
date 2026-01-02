@@ -9,6 +9,7 @@ class TradingBot {
         this.priceHistory = [];
         this.tradeHistory = [];
         this.isRunning = false;
+        this.priceSimulationInterval = null;
         
         // Moving average periods
         this.fastMAPeriod = 5;
@@ -76,7 +77,7 @@ class TradingBot {
     }
     
     startPriceSimulation() {
-        setInterval(() => {
+        this.priceSimulationInterval = setInterval(() => {
             // Simulate price movement
             const change = (Math.random() - 0.5) * 5;
             this.currentPrice = Math.max(50, Math.min(200, this.currentPrice + change));
@@ -141,7 +142,7 @@ class TradingBot {
     }
     
     buy(manual = false) {
-        if (this.cash < this.currentPrice) {
+        if (this.currentPrice <= 0 || this.cash < this.currentPrice) {
             this.addTradeLog('Insufficient funds to buy', 'error');
             return;
         }
