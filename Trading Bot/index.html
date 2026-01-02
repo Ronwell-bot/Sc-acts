@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Bot - Automated Trading System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Automated Trading Bot</h1>
+            <p class="subtitle">Simple Moving Average Strategy</p>
+        </header>
+
+        <div class="dashboard">
+            <!-- Portfolio Section -->
+            <div class="card portfolio-card">
+                <h2>💼 Portfolio</h2>
+                <div class="portfolio-stats">
+                    <div class="stat">
+                        <span class="stat-label">Cash:</span>
+                        <span class="stat-value" id="cash">$10,000.00</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Assets:</span>
+                        <span class="stat-value" id="assets">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Total Value:</span>
+                        <span class="stat-value" id="totalValue">$10,000.00</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Profit/Loss:</span>
+                        <span class="stat-value" id="profitLoss">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Chart Section -->
+            <div class="card chart-card">
+                <h2>📈 Price Chart</h2>
+                <div class="price-display">
+                    <span class="current-price" id="currentPrice">$100.00</span>
+                    <span class="price-change" id="priceChange">+0.00%</span>
+                </div>
+                <canvas id="priceChart"></canvas>
+                <div class="indicators">
+                    <div class="indicator">
+                        <span>Fast MA (5):</span>
+                        <span id="fastMA">-</span>
+                    </div>
+                    <div class="indicator">
+                        <span>Slow MA (20):</span>
+                        <span id="slowMA">-</span>
+                    </div>
+                    <div class="indicator">
+                        <span>Signal:</span>
+                        <span id="signal" class="signal-neutral">HOLD</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bot Controls -->
+            <div class="card controls-card">
+                <h2>⚙️ Bot Controls</h2>
+                <div class="bot-status">
+                    <span>Status:</span>
+                    <span id="botStatus" class="status-stopped">STOPPED</span>
+                </div>
+                <div class="control-buttons">
+                    <button id="startBot" class="btn btn-start">Start Bot</button>
+                    <button id="stopBot" class="btn btn-stop" disabled>Stop Bot</button>
+                    <button id="resetBot" class="btn btn-reset">Reset</button>
+                </div>
+                <div class="manual-controls">
+                    <h3>Manual Trading</h3>
+                    <div class="manual-buttons">
+                        <button id="manualBuy" class="btn btn-buy">Buy</button>
+                        <button id="manualSell" class="btn btn-sell">Sell</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trading History -->
+            <div class="card history-card">
+                <h2>📊 Trading History</h2>
+                <div class="history-container" id="historyContainer">
+                    <p class="no-trades">No trades yet. Start the bot to begin trading!</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>⚠️ This is a simulation for educational purposes only</p>
+        </footer>
+    </div>
+
+    <script src="tradingBot.js"></script>
+</body>
+</html>
