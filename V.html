@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>System Diagnostic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: #0a0e27;
+            color: #00d9ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 2s ease;
+        }
+
+        body.warm-phase {
+            background: linear-gradient(135deg, #1a0a1e 0%, #2d1b2e 50%, #3d1e33 100%);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .particle {
+            position: absolute;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .system-text {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        .system-text.large {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        .emotional-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ffb3d9;
+            font-style: italic;
+            margin: 20px 0;
+            text-shadow: 0 0 15px rgba(255, 179, 217, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 217, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #00ffaa);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #00d9ff;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px 10px 10px 0;
+            background: rgba(0, 217, 255, 0.1);
+            border: 2px solid #00d9ff;
+            color: #00d9ff;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 217, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn.warm {
+            border-color: #ff6b9d;
+            color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .btn.warm::before {
+            background: rgba(255, 107, 157, 0.3);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            font-weight: 500;
+        }
+
+        .memory-file {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .memory-file:active {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: #00d9ff;
+        }
+
+        .memory-file.expanded {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: #00d9ff;
+        }
+
+        .memory-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            font-family: 'Crimson Text', serif;
+            color: #ffb3d9;
+            font-style: italic;
+            padding-top: 0;
+        }
+
+        .memory-file.expanded .memory-content {
+            max-height: 200px;
+            padding-top: 15px;
+        }
+
+        .error-list {
+            background: rgba(255, 107, 157, 0.05);
+            border-left: 3px solid #ff6b9d;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .error-item {
+            color: #ff6b9d;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end);
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .heart-float {
+            position: fixed;
+            font-size: 30px;
+            pointer-events: none;
+            z-index: 999;
+            animation: heartFloat 4s ease-in forwards;
+        }
+
+        @keyframes heartFloat {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        .certificate {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(196, 69, 105, 0.1));
+            border: 2px solid #ff6b9d;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .certificate-title {
+            font-size: 20px;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .certificate-detail {
+            font-size: 13px;
+            color: #ffb3d9;
+            margin: 8px 0;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .glow {
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 107, 157, 0.2);
+            border: 1px solid #ff6b9d;
+            color: #ff6b9d;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .music-toggle:active {
+            transform: scale(0.9);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b9d;
+            position: fixed;
+            top: -10px;
+            z-index: 999;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .center-content {
+            text-align: center;
+        }
+
+        .spacing-large {
+            margin: 40px 0;
+        }
+
+        .spacing-medium {
+            margin: 25px 0;
+        }
+
+        .gift-image, .couple-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.4);
+            border: 3px solid rgba(255, 107, 157, 0.6);
+            animation: imageGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes imageGlow {
+            0%, 100% { box-shadow: 0 8px 30px rgba(255, 107, 157, 0.4); }
+            50% { box-shadow: 0 8px 40px rgba(255, 107, 157, 0.7); }
+        }
+
+        .image-caption {
+            text-align: center;
+            font-family: 'Crimson Text', serif;
+            color: #ffb3d9;
+            font-style: italic;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Optional Music Toggle -->
+    <button class="music-toggle" id="musicToggle" style="display: none;">♪ Music Off</button>
+
+    <div class="container">
+        <!-- PHASE 0: Boot Sequence -->
+        <div class="screen active" id="screen0">
+            <div class="system-text large typewriter">💕 RELATIONSHIP STATUS MONITOR v.4.5 💕</div>
+            <div class="system-text">Initializing emotional diagnostics<span class="loading-dots"></span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="bootProgress"></div>
+            </div>
+            <div class="system-text" id="bootStatus"></div>
+        </div>
+
+        <!-- PHASE 1: Memory Recovery -->
+        <div class="screen" id="screen1">
+            <div class="system-text large">💾 MEMORY RECOVERY MODULE</div>
+            <div class="system-text spacing-medium">Residual emotional signals detected... 💫</div>
+            <div class="system-text">Connection strength: <span class="glow">77%</span> 💗</div>
+            <div class="spacing-large"></div>
+            <div class="system-text">Would you like to review our precious memories together? 🥺</div>
+            <div class="spacing-medium"></div>
+            <button class="btn" onclick="showMemories()">Review Our Memories 💭</button>
+            <button class="btn" onclick="confirmSkip('memories')">Skip...</button>
+        </div>
+
+        <!-- Memory Files Screen -->
+        <div class="screen" id="screenMemories">
+            <div class="system-text large">📂 RECOVERED MEMORY FILES</div>
+            <div class="system-text" style="color: #ffb3d9; margin-top: 10px;">Tap each memory to relive our moments... ✨</div>
+            <div class="spacing-medium" id="memoryList"></div>
+            <div class="spacing-large"></div>
+            <button class="btn" onclick="nextPhase(2)">Continue 💫</button>
+        </div>
+
+        <!-- PHASE 2: Accountability -->
+        <div class="screen" id="screen2">
+            <div class="system-text large">⚠️ ERROR SOURCE ANALYSIS</div>
+            <div class="system-text spacing-medium">Analysis complete. 📊</div>
+            <div class="error-list">
+                <div class="system-text" style="margin-bottom: 10px;">Detected Errors:</div>
+                <div class="error-item">- PrideFirewall.exe 🚫</div>
+                <div class="error-item">- EgoResponse.dll ❌</div>
+                <div class="error-item">- CommunicationTimeout.sys 💔</div>
+                <div class="error-item">- HonestyProtocol.sys [DISABLED] 😔</div>
+                <div class="error-item">- TrustConnection.dll [CORRUPTED] 💔</div>
+            </div>
+            <div class="system-text spacing-medium">System acknowledges responsibility for failure. 😢</div>
+            <div class="system-text">Repair attempt possible... 🔧</div>
+            <div class="spacing-large"></div>
+            <button class="btn" onclick="showApology()">View My Heart 💌</button>
+        </div>
+
+        <!-- Apology Screen -->
+        <div class="screen" id="screenApology">
+            <div class="system-text large">💌 FROM MY HEART TO YOURS</div>
+            <div class="spacing-large" id="apologyText"></div>
+            <div class="spacing-large"></div>
+            <button class="btn" onclick="showGift()">Continue 💕</button>
+        </div>
+
+        <!-- Gift Reveal Screen -->
+        <div class="screen" id="screenGift">
+            <div class="system-text large">🎁 A GIFT FOR YOU</div>
+            <div class="system-text spacing-medium">Sorry if wala ako madalas gift. Eto muna flower sa ngayon... 🥺</div>
+            <div class="spacing-medium"></div>
+            <img id="giftImageElement" class="gift-image" alt="My gift for you">
+            <div class="image-caption">For you, with all of me 💝</div>
+            <div class="spacing-large"></div>
+            <div class="emotional-text center-content">
+                "I hope this makes you smile,<br>even just a little. 😊💕"
+            </div>
+            <div class="spacing-large"></div>
+            <button class="btn" onclick="nextPhase(3)">Continue 💫</button>
+        </div>
+
+        <!-- PHASE 3: Emotional Core -->
+        <div class="screen" id="screen3">
+            <div class="system-text large">💖 EMOTIONAL CORE STATUS</div>
+            <div class="spacing-medium"></div>
+            <div class="system-text">Primary bond status: <span class="glow pulse">ACTIVE</span> 💗</div>
+            <div class="system-text">Emotional dependency level: <span class="glow">HIGH</span> 🥺</div>
+            <div class="system-text">Attachment integrity: <span class="glow">INTACT</span> ✨</div>
+            <div class="system-text">Missing you level: <span class="glow pulse">MAXIMUM</span> 😭💕</div>
+            <div class="spacing-large"></div>
+            <div class="emotional-text center-content">
+                "Despite everything that happened,<br>my heart still beats for you." 💔→💗
+            </div>
+            <div class="spacing-large"></div>
+            <div class="system-text">Can we try to rebuild what we had? 🥺</div>
+            <div class="spacing-medium"></div>
+            <button class="btn warm" onclick="reconnect()">Let's Try Again 💕</button>
+            <button class="btn warm" onclick="confirmExit()">Ayaw na...</button>
+        </div>
+
+        <!-- Exit Screen -->
+        <div class="screen" id="screenExit">
+            <div class="system-text large">💔 GOODBYE...</div>
+            <div class="system-text spacing-medium">Okii po... and I respect your decision. 😢</div>
+            <div class="spacing-large"></div>
+            <div class="emotional-text center-content">
+                "I love you...<br> I'm Sorry. 🥺💕<br><br>
+                Thank you for the memories. 💗<br><br>"
+            </div>
+        </div>
+
+        <!-- Reconnection Process -->
+        <div class="screen" id="screenReconnect">
+            <div class="system-text large">🔄 INITIATING RECONNECTION</div>
+            <div class="spacing-medium"></div>
+            <div class="system-text" id="reconnectStatus">Rebuilding trust<span class="loading-dots"></span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="reconnectProgress"></div>
+            </div>
+        </div>
+
+        <!-- FINAL PROPOSAL -->
+        <div class="screen" id="screenProposal">
+            <div class="spacing-large"></div>
+            <div class="emotional-text center-content glow" style="font-size: 24px; margin-bottom: 30px;">
+                "Will you give us another chance? 🥺💕"
+            </div>
+            <div class="emotional-text center-content glow" style="font-size: 22px;">
+                "Will you be my Valentine? 💝"
+            </div>
+            <div class="emotional-text center-content" style="font-size: 16px; margin-top: 20px;">
+                "Let's be honest with each other from now on...<br>Let's make our promises come true together. ✨"
+            </div>
+            <div class="spacing-large"></div>
+            <div class="center-content">
+                <button class="btn primary" onclick="acceptProposal()">Yes, let's try again 💕❤️✨</button>
+                <button class="btn warm" onclick="confirmNeedTime()">I need time to think...</button>
+            </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div class="screen" id="screenSuccess">
+            <div class="system-text large glow" style="color: #ff6b9d;">✨ SYSTEM FULLY RESTORED ✨</div>
+            <div class="system-text spacing-medium" style="color: #ffb3d9;">Relationship Status: <span class="pulse">RECONNECTED 💕</span></div>
+            <div class="spacing-large"></div>
+            
+            <img id="couplePhotoElement" class="couple-image" alt="Us together">
+            <div class="image-caption">Us. Forever. 💗</div>
+            
+            <div class="spacing-medium"></div>
+            <div class="emotional-text center-content" style="font-size: 22px;">
+                "Welcome back, my favorite person. 🥺💗<br><br>
+                Let's create better memories together.<br>
+                Let's be honest, open, and stronger. 💪💕<br><br>
+                I promise to do better. I promise to show you more.<br>
+                Starting with this... my heart. 💝"
+            </div>
+            <div class="spacing-large"></div>
+            <div class="certificate" id="certificate"></div>
+        </div>
+
+        <!-- NEED TIME SCREEN -->
+        <div class="screen" id="screenTime">
+            <div class="system-text large">⏰ I UNDERSTAND...</div>
+            <div class="system-text spacing-medium">Take all the time you need. 💭</div>
+            <div class="spacing-large"></div>
+            <div class="emotional-text center-content">
+                "I'll be here waiting, hoping... 🥺<br><br>
+                No pressure. No rush.<br>
+                Just know that my heart is still yours,<br>
+                whenever you're ready. 💕<br><br>
+                Thank you for at least reading this far. 😢💗"
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const relationshipData = {
+            yourName: "Mac", // ← Edit this
+            partnerName: "Jewel", // ← Edit this
+            
+            // ===== IMAGES =====
+            // Upload your images and paste the file paths or URLs here
+            giftImage: "g.jpg", // ← Replace with your gift photo URL
+            couplePhoto: "us.jpg", // ← Replace with your couple photo URL
+            
+            memories: [
+                {
+                    title: "prom_night_year-end_ball.log 💫",
+                    message: "Our first date at the prom... Wish we could revisit the moment. ✨"
+                },
+                {
+                    title: "sad_song_by_we_the_kings.mp3 🎵",
+                    message: "Our first song. Pinatugtog mo to ng isang gabi. Maybe it reminds you of us. 💕"
+                },
+                {
+                    title: "nagcarlan_trip_memories.dat 🌄",
+                    message: "Sorry if matagal bago nasundan to. It was the best trip for me, rather than sa mga gala kasama iba. 🥺"
+                },
+                {
+                    title: "promises_and_dreams.log 🌟",
+                    message: "Thought about the dreams and goals natin sa buhay. Masakit if mapupunta na sa wala. 💭"
+                },
+                {
+                    title: "missing_you_file.sys 💔",
+                    message: "Masakit pala talaga malayo sa asawa. Namimiss pero bakit ganun... 😢"
+                }
+            ],
+            
+            apologyMessage: [
+                "Sorry hindi kita madalas mabigyan ng mga gifts. 🎁",
+                "Sorry sa mga pagkukulang ko. At nakakapanakit sayo 💔",
+                "Sorry kung sira na mga tiwala 😔",
+                "Sorry sa pagiging tahimik 😢",
+                "Sorry kung pinipili ko madalas ang sumuko 💕"
+            ],
+            
+            reconnectionMessage: "Will you give us another chance? 🥺💕"
+        };
+
+        // ===== GLOBAL STATE =====
+        let currentScreen = 0;
+        let musicPlaying = false;
+
+        // ===== INITIALIZATION =====
+        window.onload = function() {
+            createParticles();
+            startBootSequence();
+            loadImages();
+        };
+
+        // ===== LOAD IMAGES =====
+        function loadImages() {
+            // Load gift image
+            const giftImg = document.getElementById('giftImageElement');
+            if (giftImg && relationshipData.giftImage) {
+                giftImg.src = relationshipData.giftImage;
+            }
+            
+            // Load couple photo
+            const coupleImg = document.getElementById('couplePhotoElement');
+            if (coupleImg && relationshipData.couplePhoto) {
+                coupleImg.src = relationshipData.couplePhoto;
+            }
+        }
+
+        // ===== PARTICLE SYSTEM =====
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                // Add heart emoji particles occasionally
+                if (Math.random() > 0.7) {
+                    particle.innerHTML = '💕';
+                    particle.style.background = 'transparent';
+                    particle.style.fontSize = '12px';
+                    particle.style.opacity = '0.6';
+                }
+                
+                container.appendChild(particle);
+            }
+            
+            // Transition particles to pink over time
+            setTimeout(() => {
+                document.querySelectorAll('.particle').forEach(p => {
+                    if (!p.innerHTML) {
+                        p.style.background = '#ff6b9d';
+                        p.style.transition = 'background 3s ease';
+                    }
+                });
+            }, 15000);
+        }
+
+        // ===== BOOT SEQUENCE =====
+        function startBootSequence() {
+            const progress = document.getElementById('bootProgress');
+            const status = document.getElementById('bootStatus');
+            const messages = [
+                'Scanning communication logs... 📡',
+                'Analyzing conflict data... 💔',
+                'Critical Event Detected: Trust Issues 😔',
+                'Dishonesty patterns found... 😢',
+                'System Separation Initiated... 💔',
+                '',
+                'Wait... residual emotional signal detected... 💫',
+                'Love levels still high... 💗',
+                'Missing you intensity: MAXIMUM 🥺',
+                'Connection strength: 67% 💕'
+            ];
+            
+            let step = 0;
+            let progressValue = 0;
+            
+            const interval = setInterval(() => {
+                progressValue += 10;
+                progress.style.width = Math.min(progressValue, 100) + '%';
+                
+                if (step < messages.length) {
+                    status.innerHTML = messages[step];
+                    step++;
+                }
+                
+                if (progressValue >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => nextPhase(1), 1500);
+                }
+            }, 700);
+        }
+
+        // ===== SCREEN MANAGEMENT =====
+        function nextPhase(phase) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + phase).classList.add('active');
+            
+            if (phase >= 3) {
+                document.body.classList.add('warm-phase');
+            }
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // ===== MEMORY MODULE =====
+        function showMemories() {
+            const memoryList = document.getElementById('memoryList');
+            memoryList.innerHTML = '';
+            
+            relationshipData.memories.forEach((memory, index) => {
+                const memoryDiv = document.createElement('div');
+                memoryDiv.className = 'memory-file';
+                memoryDiv.innerHTML = `
+                    <div class="system-text">Recovered File:</div>
+                    <div class="system-text" style="color: #00ffaa; margin-left: 10px;">${memory.title}</div>
+                    <div class="memory-content">${memory.message}</div>
+                `;
+                memoryDiv.onclick = function() {
+                    this.classList.toggle('expanded');
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate(50);
+                    }
+                };
+                memoryList.appendChild(memoryDiv);
+            });
+            
+            showScreen('screenMemories');
+        }
+
+        // ===== APOLOGY MODULE =====
+        function showApology() {
+            const apologyDiv = document.getElementById('apologyText');
+            apologyDiv.innerHTML = '';
+            
+            relationshipData.apologyMessage.forEach(line => {
+                const p = document.createElement('div');
+                p.className = 'emotional-text';
+                p.textContent = line;
+                apologyDiv.appendChild(p);
+            });
+            
+            showScreen('screenApology');
+        }
+
+        // ===== GIFT REVEAL =====
+        function showGift() {
+            showScreen('screenGift');
+            if ('vibrate' in navigator) {
+                navigator.vibrate([100, 50, 100]);
+            }
+        }
+
+        // ===== RECONNECTION =====
+        function reconnect() {
+            showScreen('screenReconnect');
+            
+            const progress = document.getElementById('reconnectProgress');
+            const status = document.getElementById('reconnectStatus');
+            const steps = [
+                'Rebuilding trust... 🔧💕',
+                'Restoring honest communication... 💬✨',
+                'Committing to transparency... 🪟💗',
+                'Promising to be better... 🤝💕',
+                'Loading our future together... 🌟',
+                'Reconnection ready... 💖'
+            ];
+            
+            let step = 0;
+            let progressValue = 0;
+            
+            const interval = setInterval(() => {
+                progressValue += 16.6;
+                progress.style.width = Math.min(progressValue, 100) + '%';
+                
+                if (step < steps.length) {
+                    status.innerHTML = steps[step];
+                    step++;
+                }
+                
+                if (progressValue >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => showScreen('screenProposal'), 1000);
+                }
+            }, 1000);
+        }
+
+        // ===== CONFIRMATION DIALOGS =====
+        function confirmSkip(section) {
+            const messages = {
+                'memories': "Are you sure? These memories mean so much to me... 🥺💔"
+            };
+            
+            if (confirm(messages[section])) {
+                nextPhase(2);
+            }
+        }
+
+        function confirmExit() {
+            if (confirm("Please... can we at least try? I miss you so much... 😭💔")) {
+                // Give them another chance to reconsider
+                return;
+            } else {
+                if (confirm("I understand it hurts... but are you really sure? 🥺💕")) {
+                    return;
+                } else {
+                    exitProgram();
+                }
+            }
+        }
+
+        function confirmNeedTime() {
+            if (confirm("I understand you need time... but can I ask you to think about us? About our promises? 🥺💭")) {
+                // Stay on proposal screen
+                return;
+            } else {
+                needTime();
+            }
+        }
+
+        // ===== EXIT =====
+        function exitProgram() {
+            showScreen('screenExit');
+            if ('vibrate' in navigator) {
+                navigator.vibrate([200, 100, 200]);
+            }
+        }
+
+        // ===== PROPOSAL RESPONSES =====
+        function acceptProposal() {
+            showScreen('screenSuccess');
+            createConfetti();
+            createFloatingHearts();
+            generateCertificate();
+            
+            if ('vibrate' in navigator) {
+                navigator.vibrate([100, 50, 100, 50, 200]);
+            }
+        }
+
+        function needTime() {
+            showScreen('screenTime');
+        }
+
+        // ===== VISUAL EFFECTS =====
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#c44569', '#ffb3d9', '#00d9ff', '#00ffaa'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = '0s';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        function createFloatingHearts() {
+            const hearts = ['❤️', '💕', '💖', '💗', '💝'];
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-float';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = '0s';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 200);
+            }
+        }
+
+        // ===== CERTIFICATE GENERATION =====
+        function generateCertificate() {
+            const cert = document.getElementById('certificate');
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            const certId = 'LOVE-' + today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+            
+            cert.innerHTML = `
+                <div class="certificate-title">💕✨ RECONNECTION CERTIFICATE ✨💕</div>
+                <div class="certificate-detail" style="font-size: 11px; margin-bottom: 15px;">Certificate ID: ${certId}</div>
+                <div class="certificate-detail">🤍 ${relationshipData.yourName} 🤍</div>
+                <div class="certificate-detail" style="font-size: 18px; margin: 10px 0;">💗 & 💗</div>
+                <div class="certificate-detail">🤍 ${relationshipData.partnerName} 🤍</div>
+                <div class="certificate-detail" style="margin-top: 15px;">Status: <span style="color: #ff6b9d;">Officially My Valentine 💝</span></div>
+                <div class="certificate-detail">Date: ${dateStr}</div>
+                <div class="emotional-text" style="margin-top: 20px; font-size: 16px;">
+                    "A new beginning starts today. 🌅💕<br>
+                    With honesty, trust, and lots of love. ✨<br><br>
+                    Let's make our dreams come true together. 🌟"
+                </div>
+                <div class="certificate-detail" style="margin-top: 20px; font-size: 12px; color: #00d9ff;">
+                    P.S. I know I haven't given you gifts in a while...<br>
+                    So here's my first gift: My whole heart. 💝<br>
+                    More to come, I promise. 🎁💕
+                </div>
+            `;
+        }
+
+        // ===== BACKGROUND MUSIC =====
+        // Sweet/Sad Piano Instrumental - Using a royalty-free emotional piano track
+        const bgMusic = new Audio('https://cdn.pixabay.com/audio/2022/05/13/audio_257112e489.mp3'); // Emotional Piano
+        bgMusic.loop = true;
+        bgMusic.volume = 0.25;
+        
+        // Auto-play music on first user interaction
+        let musicStarted = false;
+        document.addEventListener('click', function startMusic() {
+            if (!musicStarted) {
+                bgMusic.play().catch(e => console.log('Audio autoplay prevented'));
+                musicStarted = true;
+                document.getElementById('musicToggle').style.display = 'block';
+                document.getElementById('musicToggle').textContent = '🎵 Music On';
+            }
+        }, { once: true });
+        
+        document.getElementById('musicToggle').onclick = function() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                this.textContent = '🎵 Music Off';
+            } else {
+                bgMusic.play();
+                this.textContent = '🎵 Music On';
+            }
+            musicPlaying = !musicPlaying;
+        };
+        
+        // Start music as playing
+        musicPlaying = true;
+    </script>
+</body>
+</html>
